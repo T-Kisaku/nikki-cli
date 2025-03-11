@@ -25,46 +25,5 @@
 | `--month <MM>`          | Specify the month (requires `--year`, cannot be used with `--from`, `--to`)             | `nikki ai --year 2025 --month 03`          |
 | `--day <DD>`            | Specify the day (requires `--year` and `--month`, cannot be used with `--from`, `--to`) | `nikki ai --year 2025 --month 03 --day 10` |
 | `-p, --prompt <string>` | Pass a prompt to ask the AI                                                             | `nikki ai -p "Summarize my entries"`       |
-
-| Option                | Description                      | Example |
-| --------------------- | -------------------------------- | ------- |
-| -p, --prompt <string> | Pass prompt that you want to ask |         |
-|                       |                                  |         |
-|                       |                                  |         |
-|                       |                                  |         |
-
-### ``
-
-| Option | Description | Example |
-| ------ | ----------- | ------- |
-|        |             |         |
-|        |             |         |
-|        |             |         |
-|        |             |         |
-
-### ``
-
-| Option | Description | Example |
-| ------ | ----------- | ------- |
-|        |             |         |
-|        |             |         |
-|        |             |         |
-|        |             |         |
-
-### ``
-
-| Option | Description | Example |
-| ------ | ----------- | ------- |
-|        |             |         |
-|        |             |         |
-|        |             |         |
-|        |             |         |
-
-| Command | Flags            | Description                           |
-| ------- | ---------------- | ------------------------------------- |
-| write   | --format=        | 0: Today, +1: Tomorrow, -1: Yesterday |
-|         | --today, -t      | Markdown for today                    |
-|         | --yesterday, -y  | Markdown for yesterday                |
-|         | --tomorrow, --tm | Markdown for tomorrow                 |
-| analyze |                  |                                       |
+| `--data <file>`         | Specify a custom data file for the journal                                              | `nikki ai --data nikki.json`               |
 
