@@ -1,29 +1,116 @@
-# nikki-cli
+# nik-cl
 
-## Purpose
+## Motto
 
-`Only 1 Markdown file, for 1 day`
+> "Only one Markdown file per day."
 
 ## Commands
 
-### `open`
+### `edit`
 
-| Option                | Description                                     | Example                    |
-| --------------------- | ----------------------------------------------- | -------------------------- |
-| `-f, --format <date>` | Open a journal for a specific date (YYYY-MM-DD) | `nikki open -f 2025-03-11` |
-| `-t, --today`         | Open today's journal                            | `nikki open -t`            |
-| `-y, --yesterday`     | Open yesterday's journal                        | `nikki open -y`            |
-| `-tm, --tomorrow`     | Open tomorrow's journal                         | `nikki open -tm`           |
+Create or modify a journal entry for a specific date.
 
-### `ai`
+```sh
+nik edit [date-spec] [options]
+```
 
-| Option                  | Description                                                                             | Example                                    |
-| ----------------------- | --------------------------------------------------------------------------------------- | ------------------------------------------ |
-| `--from <date>`         | Specify the start date (cannot be used with `--year`, `--month`, `--day`)               | `nikki ai --from 2025-03-01`               |
-| `--to <date>`           | Specify the end date (cannot be used with `--year`, `--month`, `--day`)                 | `nikki ai --to 2025-03-10`                 |
-| `--year <YYYY>`         | Specify the year (cannot be used with `--from`, `--to`)                                 | `nikki ai --year 2025`                     |
-| `--month <MM>`          | Specify the month (requires `--year`, cannot be used with `--from`, `--to`)             | `nikki ai --year 2025 --month 03`          |
-| `--day <DD>`            | Specify the day (requires `--year` and `--month`, cannot be used with `--from`, `--to`) | `nikki ai --year 2025 --month 03 --day 10` |
-| `-p, --prompt <string>` | Pass a prompt to ask the AI                                                             | `nikki ai -p "Summarize my entries"`       |
-| `--data <file>`         | Specify a custom data file for the journal                                              | `nikki ai --data nikki.json`               |
+#### Options
 
+| Option                      | Description                                                               | Example                 |
+| --------------------------- | ------------------------------------------------------------------------- | ----------------------- |
+| `-t, --template <template>` | Apply a predefined template from the `journal_folder/template` directory. | `nik edit -t daily-log` |
+
+#### Templates
+
+Templates are stored in the `journal_folder/template` directory. Each template is a Markdown (`.md`) file that contains pre-defined content structures. To create or modify a template, navigate to the `template` folder inside your journal directory and add or edit `.md` files.
+
+Example:
+
+```sh
+mkdir -p ~/journal/template
+nano ~/journal/template/daily-log.md
+```
+
+You can then use the template with:
+
+```sh
+nik edit -t daily-log
+```
+
+### `ask`
+
+Query your journal with flexible date filters.
+
+```sh
+nik ask [prompt] [options]
+```
+
+#### Options
+
+| Option                        | Description                                                | Example                     |
+| ----------------------------- | ---------------------------------------------------------- | --------------------------- |
+| `--from <date-spec>`          | Specify the start date (cannot be used with `--date-spec`) | `nik ask --from 2025.03.01` |
+| `--to <date-spec>`            | Specify the end date (cannot be used with `--date-spec`)   | `nik ask --to 2025.03.10`   |
+| `-d, --date-spec <date-spec>` | Filter by a specific year, month, or day                   | `nik ask -d 2025`           |
+
+### `md-to-json`
+
+Convert Markdown journal files into JSON format.
+
+```sh
+nik md-to-json [md-files] [json-file] [options]
+```
+
+#### Options
+
+| Option         | Description                                       |
+| -------------- | ------------------------------------------------- |
+| `-u, --update` | Skip conversion if the latest data already exists |
+
+## Configuration
+
+You can configure `nik-cl` by placing a configuration file in `~/.nikconfig` or `~/.config/nik`.
+
+```conf
+journal_folder = "path/to/journal"
+edit_command = "your_editor"
+```
+
+## JSON Format Structure
+
+Converted journal entries follow this JSON structure:
+
+```json
+{
+  "[year]": {
+    "[month]": {
+      "[date]": {
+        "last-edited": "[timestamp]",
+        "content": {
+          "Title of #": {
+            "text": "Main content here",
+            "subsections": {
+              "Title of ##": {
+                "text": "Subcontent here",
+                "subsections": {
+                  "Title of ###": {
+                    "text": "Nested content here"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+## Date Specifications
+
+You can specify dates using:
+
+```plain
+YYYY.MM.DD  | YYYY.MM  | YYYY  | yesterday  | today  | tomorrow
+```
