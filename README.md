@@ -134,7 +134,3 @@ You can specify dates using:
 ```plain
 YYYY.MM.DD  | YYYY.MM  | YYYY  | yesterday  | today  | tomorrow
 ```
-
----
-
-This revision improves clarity, formatting, and consistency while keeping the content concise and user-friendly.
