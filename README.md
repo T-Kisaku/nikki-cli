@@ -67,6 +67,26 @@ nik md-to-json [md-files] [json-file] [options]
 | -------------- | ------------------------------------------------- |
 | `-u, --update` | Skip conversion if the latest data already exists |
 
+### `help`
+
+Display available commands and usage details.
+
+```sh
+nik help
+```
+
+You can also get help for a specific command:
+
+```sh
+nik help <command>
+```
+
+Example:
+
+```sh
+nik help edit
+```
+
 ## Configuration
 
 You can configure `nik-cl` by placing a configuration file in `~/.nikconfig` or `~/.config/nik`.
@@ -114,3 +134,7 @@ You can specify dates using:
 ```plain
 YYYY.MM.DD  | YYYY.MM  | YYYY  | yesterday  | today  | tomorrow
 ```
+
+---
+
+This revision improves clarity, formatting, and consistency while keeping the content concise and user-friendly.
