@@ -1,4 +1,4 @@
-# nik-cl
+# nikki-cli
 
 ## Motto
 
