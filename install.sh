@@ -11,7 +11,7 @@ VERSION=$(curl -sL "https://api.github.com/repos/$REPO/releases/latest" | grep '
 # Construct download URL
 BIN_URL="https://github.com/$REPO/releases/download/$VERSION/nik"
 
-echo "Downloading nik v$VERSION..."
+echo "Downloading nik $VERSION..."
 curl -fsSL -o nik "$BIN_URL"
 chmod +x nik
 sudo mv nik "$INSTALL_DIR/nik"
