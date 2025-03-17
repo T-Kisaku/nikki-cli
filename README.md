@@ -4,6 +4,13 @@
 
 > "Only one Markdown file per day."
 
+## Installation
+
+```sh
+
+curl -fsSL https://raw.githubusercontent.com/T-Kisaku/nikki-cli/main/install.sh | sh
+```
+
 ## Commands
 
 ### `edit`
