@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "deno.ns",
+      "deno.window"
+    ],
+    "strict": true
+  },
+  "tasks": {
+    "build": "deno compile --allow-read --allow-write --allow-run --allow-env -o nik src/main.ts",
+    "run": "deno run --allow-read --allow-write --allow-run --allow-env src/main.ts"
+  },
+  "imports": {
+    "@src/": "./src/",
+    "@cliffy/command": "jsr:@cliffy/command@^1.0.0-rc.7",
+    "@std/path": "jsr:@std/path@^1.0.8"
+  }
+}
