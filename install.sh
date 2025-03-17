@@ -2,7 +2,7 @@
 
 set -e
 
-REPO="yourusername/nik"
+REPO="T-Kisaku/nikki-cli"
 INSTALL_DIR="/usr/local/bin"
 
 # Fetch latest version
