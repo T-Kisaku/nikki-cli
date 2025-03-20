@@ -10,14 +10,18 @@ export default new Command<GlobalOptions>()
   .arguments("[date:string]")
   .option(
     "-t, --template <template:string>",
-    "Path to a template file for new entries",
+    "Path to a template file for new entries, in default NIK_JOURNAL_DIR/default.md",
+  )
+  .option(
+    "--no-template",
+    "Create the entry without a template",
   )
   .option(
     "-e, --editor <editor:string>",
     "Editor command to use (defaults to $EDITOR or nano/notepad)",
   )
   .option(
-    "-n, --no-open",
+    "--no-open",
     "Create/update the entry without opening it in an editor",
   )
   .env("EDITOR=<value:string>", "Editor command to use", {
@@ -50,13 +54,19 @@ const generateJournalFile = async (
   { filePath, journalDir, template }: {
     filePath: string;
     journalDir: string;
-    template?: string;
+    template?: string | false;
   },
 ) => {
-  const templatePath = template
-    ? join(journalDir, "template", `${template}.md`)
-    : "";
   let content = "";
+  let templatePath: string | null;
+
+  if (template == false) {
+    templatePath = null;
+  } else if (template == undefined) {
+    templatePath = getTemplatePath({ journalDir, template: "default" });
+  } else {
+    templatePath = getTemplatePath({ journalDir, template });
+  }
   if (templatePath) {
     try {
       content = await Deno.readTextFile(templatePath);
@@ -77,6 +87,10 @@ const generateJournalFile = async (
     Deno.exit(1);
   }
 };
+
+const getTemplatePath = (
+  { journalDir, template }: { journalDir: string; template: string },
+) => join(journalDir, "template", `${template}.md`);
 
 // TODO: error handling
 const openWithEditor = async (
