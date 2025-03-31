@@ -16,12 +16,14 @@ const strToDateSpec = (dateArg?: string): DateSpec => {
 
   switch (dateStr.toLowerCase()) {
     case "yesterday":
+    case "y":
       date.setDate(date.getDate() - 1);
       break;
-    case "tomorrow":
+    case "tm":
       date.setDate(date.getDate() + 1);
       break;
     case "today":
+    case "t":
     case "":
       break;
     default:
