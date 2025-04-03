@@ -38,7 +38,7 @@ export default new Command<GlobalOptions>()
       isNewFile = true;
     }
     if (isNewFile) {
-      await generateJournalFile({ filePath, template, journalDir });
+      await generateJournalFile({ filePath, template, journalDir, dateStr });
     }
 
     if (open) {
@@ -51,10 +51,11 @@ export default new Command<GlobalOptions>()
 // TODO: it's better that user can have access of defining their variable for template
 // TODO: error handling
 const generateJournalFile = async (
-  { filePath, journalDir, template }: {
+  { filePath, journalDir, template, dateStr }: {
     filePath: string;
     journalDir: string;
     template?: string | false;
+    dateStr: string;
   },
 ) => {
   let content = "";
@@ -70,6 +71,7 @@ const generateJournalFile = async (
   if (templatePath) {
     try {
       content = await Deno.readTextFile(templatePath);
+      content = content.replaceAll("%date", dateStr);
     } catch {
       console.error(
         "Error: Could not read template file:",
