@@ -1,7 +1,7 @@
 import { Command } from "@cliffy/command";
 import { parse } from "@std/path";
 import { GlobalOptions } from "@src/main.ts";
-import markdownParser from "@src/utils/markdownParser.ts";
+import markdownParser from "@src/utils/markdown/parser.ts";
 
 export default new Command<GlobalOptions>()
   .description("Convert Markdown journal files into JSON format")
@@ -9,11 +9,7 @@ export default new Command<GlobalOptions>()
     "-i, --input <path:string>",
     "Markdown file or directory to convert (default: journal directory)",
   )
-  .option(
-    "-o, --output <path:string>",
-    "Output JSON file (if not provided, prints JSON to stdout)",
-  )
-  .action(async ({ input, output, journalDir }) => {
+  .action(async ({ input, journalDir }) => {
     const inputPath = input || journalDir;
     const stat = await Deno.stat(inputPath);
     const data: OutputData = {};
@@ -22,7 +18,7 @@ export default new Command<GlobalOptions>()
     } else {
       await processFile(inputPath, data);
     }
-    outputJson({ data: data, output });
+    printInJson({ data: data });
   });
 
 interface OutputData {
@@ -85,19 +81,9 @@ async function processDirectory(dirPath: string, data: OutputData) {
   }
 }
 
-const outputJson = async (
-  { data, output }: { data: OutputData; output?: string },
+const printInJson = (
+  { data }: { data: OutputData },
 ) => {
   const jsonString = JSON.stringify(data, null, 2);
-  if (output) {
-    try {
-      await Deno.writeTextFile(output, jsonString);
-      console.log("JSON output written to", output);
-    } catch {
-      console.error("Error: Failed to write output file:", output);
-      Deno.exit(1);
-    }
-  } else {
-    console.log(jsonString);
-  }
+  console.log(jsonString);
 };
