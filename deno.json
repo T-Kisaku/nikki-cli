@@ -12,9 +12,11 @@
   },
   "imports": {
     "@src/": "./src/",
+    "@std/fs": "jsr:@std/fs@^1.0.15",
+    "@std/path": "jsr:@std/path@^1.0.8",
     "@cliffy/command": "jsr:@cliffy/command@^1.0.0-rc.7",
     "@cliffy/prompt": "jsr:@cliffy/prompt@^1.0.0-rc.7",
-    "@std/fs": "jsr:@std/fs@^1.0.15",
-    "@std/path": "jsr:@std/path@^1.0.8"
+    "tui/": "https://deno.land/x/tui@2.1.11/",
+    "crayon/": "https://deno.land/x/crayon@3.3.3/"
   }
 }

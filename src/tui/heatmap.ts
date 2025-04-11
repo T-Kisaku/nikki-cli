@@ -10,16 +10,17 @@
 //
 // とても濃い緑（最高継続）：#0b6623
 
-import { crayon } from "https://deno.land/x/crayon@3.3.3/mod.ts";
+import { crayon } from "crayon/mod.ts";
 
-import { GridLayout, Tui } from "https://deno.land/x/tui@2.1.11/mod.ts";
-import { handleInput } from "https://deno.land/x/tui@2.1.11/mod.ts";
 import {
+  GridLayout,
+  handleInput,
   handleKeyboardControls,
   handleMouseControls,
-} from "https://deno.land/x/tui@2.1.11/mod.ts";
+  Tui,
+} from "tui/mod.ts";
 
-import { Button } from "https://deno.land/x/tui@2.1.11/src/components/button.ts";
+import { Button } from "tui/src/components/mod.ts";
 import {
   countRestarts,
   findDatedFilesWithHeading,
