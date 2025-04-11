@@ -2,11 +2,12 @@ import { Command } from "@cliffy/command";
 import { Select } from "@cliffy/prompt/select";
 import { CompletionsCommand } from "@cliffy/command/completions";
 import editCmd from "@src/commands/edit.ts";
+import JournalFile from "@src/utils/JournalFile.ts";
 import mdToJsonCmd from "@src/commands/md-to-json.ts";
 import getGitTagName from "@src/utils/getGitTagName.ts";
 // import { askCmd } from "./commands/ask.ts";
-// import { helpCmd } from "./commands/help.ts";
 import startHeatMapTui from "@src/tui/heatmap.ts";
+import countup from "@src/tui/countup.ts";
 
 export type GlobalOptions = {
   journalDir: string;
@@ -29,7 +30,19 @@ await new Command()
         { name: "Exercise", value: "## Exercise" },
       ],
     });
-    await startHeatMapTui(search, journalDir);
+    if (search == "## Meditation") {
+      const journalFile = await JournalFile.create({
+        journalDir,
+        template: "default",
+      });
+      journalFile.append(search);
+      await startHeatMapTui(search, journalDir);
+      // countup((current) => {
+      //   journalFile.append(`time: ${current}s`);
+      // });
+    } else {
+      await startHeatMapTui(search, journalDir);
+    }
   })
   .command("edit", editCmd)
   // .command("habit", habitCmd)

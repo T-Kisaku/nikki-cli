@@ -12,7 +12,7 @@ import {
 import { Button } from "tui/src/components/mod.ts";
 import { num, separator } from "@src/utils/asciiArt.ts";
 
-const t = (endCallback: (currentSeconds: number) => void) => {
+export default (endCallback: (currentSeconds: number) => void) => {
   const tui = new Tui({
     style: crayon.bgBlack,
     refreshRate: 1000 / 60,
@@ -97,4 +97,3 @@ const t = (endCallback: (currentSeconds: number) => void) => {
   });
   globalThis.addEventListener("unload", () => endCallback(current));
 };
-t(console.log);
