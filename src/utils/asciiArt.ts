@@ -76,8 +76,8 @@ export const num = [
 
 export const separator = `
      
-  ██  
-      
+  ██ 
+     
   ██ 
      
 `;

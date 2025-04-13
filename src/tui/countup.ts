@@ -1,35 +1,14 @@
-import { crayon } from "crayon/mod.ts";
-
-import {
-  GridLayout,
-  handleInput,
-  handleKeyboardControls,
-  handleMouseControls,
-  Signal,
-  Tui,
-} from "tui/mod.ts";
+import { GridLayout, Signal, Tui } from "tui/mod.ts";
 
 import { Button } from "tui/src/components/mod.ts";
 import { num, separator } from "@src/utils/asciiArt.ts";
+import { waitUntilDestroy } from "@src/tui/index.ts";
 
-export default (endCallback: (currentSeconds: number) => void) => {
-  const tui = new Tui({
-    style: crayon.bgBlack,
-    refreshRate: 1000 / 60,
-  });
-
-  handleInput(tui);
-  handleMouseControls(tui);
-  handleKeyboardControls(tui);
-  tui.dispatch();
+export default (
+  tui: Tui,
+  maxSeconds: number,
+) => {
   tui.run();
-
-  tui.on("keyPress", ({ key }) => {
-    if (key === "q") {
-      tui.emit("destroy");
-    }
-  });
-
   const layout = new GridLayout(
     {
       pattern: [
@@ -55,11 +34,7 @@ export default (endCallback: (currentSeconds: number) => void) => {
 
     new Button({
       parent: tui,
-      theme: {
-        base: crayon.bgBlack,
-        focused: crayon.bgBlack,
-        active: crayon.bgBlack,
-      },
+      theme: {},
       rectangle,
       zIndex: 1,
       label: {
@@ -73,20 +48,9 @@ export default (endCallback: (currentSeconds: number) => void) => {
   }
 
   let current = 0;
-  function countUp(
-    maxSeconds: number,
-    callback?: (second: number) => void,
-  ): void {
-    const intervalId = setInterval(() => {
-      current++;
-      if (callback) callback(current);
-      if (current >= maxSeconds) {
-        clearInterval(intervalId);
-      }
-    }, 1000);
-  }
 
-  countUp(60 * 60 * 4, (_sec) => {
+  const intervalId = setInterval(() => {
+    current++;
     const minutes = Math.floor(current / 60);
     const seconds = current % 60;
 
@@ -94,6 +58,10 @@ export default (endCallback: (currentSeconds: number) => void) => {
     display[2].value = num[minutes % 10];
     display[3].value = num[Math.floor(seconds / 10)];
     display[4].value = num[seconds % 10];
-  });
-  globalThis.addEventListener("unload", () => endCallback(current));
+    if (current >= maxSeconds) {
+      clearInterval(intervalId);
+      tui.emit("destroy");
+    }
+  }, 1000);
+  return waitUntilDestroy(tui);
 };

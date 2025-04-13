@@ -8,14 +8,21 @@
   },
   "tasks": {
     "build": "deno compile --allow-read --allow-write --allow-run --allow-env -o nik src/main.ts",
-    "run": "deno run --allow-read --allow-write --allow-run --allow-env src/main.ts"
+    "run": "deno run --allow-read --allow-write --allow-run --allow-env --allow-net src/main.ts",
+    "pull-schema": "deno --env -A --node-modules-dir npm:drizzle-kit pull && sed -i 's/string/date/g' ./db/migrations/schema.ts"
   },
   "imports": {
     "@src/": "./src/",
+    "@db/": "./db/",
+    "@std/datetime": "jsr:@std/datetime@^0.225.4",
     "@std/fs": "jsr:@std/fs@^1.0.15",
     "@std/path": "jsr:@std/path@^1.0.8",
     "@cliffy/command": "jsr:@cliffy/command@^1.0.0-rc.7",
     "@cliffy/prompt": "jsr:@cliffy/prompt@^1.0.0-rc.7",
+    "@types/pg": "npm:@types/pg@^8.11.11",
+    "drizzle-kit": "npm:drizzle-kit@^0.30.6",
+    "drizzle-orm": "npm:drizzle-orm@^0.41.0",
+    "pg": "npm:pg@^8.14.1",
     "tui/": "https://deno.land/x/tui@2.1.11/",
     "crayon/": "https://deno.land/x/crayon@3.3.3/"
   }

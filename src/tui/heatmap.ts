@@ -1,49 +1,40 @@
-// Copyright 2023 Im-Beast. MIT license.
-// Simple calculator demo using grid layout
-// 薄い緑（低い継続）：#d6f5d6
-//
-// 少し濃い緑：#a8e6a1
-//
-// 中間の緑：#6ecf68
-//
-// 濃い緑（高い継続）：#34a853
-//
-// とても濃い緑（最高継続）：#0b6623
-
 import { crayon } from "crayon/mod.ts";
 
-import {
-  GridLayout,
-  handleInput,
-  handleKeyboardControls,
-  handleMouseControls,
-  Tui,
-} from "tui/mod.ts";
+import { difference, format } from "@std/datetime";
+import { GridLayout, Tui } from "tui/mod.ts";
 
 import { Button } from "tui/src/components/mod.ts";
 import {
-  countRestarts,
-  findDatedFilesWithHeading,
-} from "@src/utils/markdown/habitTrack.ts";
-import getFullWeeksWithDates from "@src/utils/getFullWeeksWithDates.ts";
+  countRestartDays,
+  countUniqueDays,
+  divide,
+  getCalendarDates,
+} from "@src/utils/date.ts";
+import { waitUntilDestroy } from "@src/tui/index.ts";
 
-export default async (search: string, directory: string) => {
-  const tui = new Tui({
-    style: crayon.bgBlack,
-    refreshRate: 1000 / 60,
-  });
+const colors = {
+  0: 0x000000,
+  1: 0xd6f5d6,
+  2: 0xa8e6a1,
+  3: 0x6ecf68,
+  4: 0x34a853,
+  5: 0x0b6623,
+} as const;
+export interface HeatmapElement {
+  datetime: Date;
+  level: 0 | 1 | 2 | 3 | 4 | 5;
+}
 
-  handleInput(tui);
-  handleMouseControls(tui);
-  handleKeyboardControls(tui);
-  tui.dispatch();
+export default async (tui: Tui, heatmapElements: HeatmapElement[]) => {
   tui.run();
-
+  const elements = getCalendarDates(new Date(), "month").map((date) =>
+    format(date, "yyyy-MM-dd")
+  );
   const layout = new GridLayout(
     {
       pattern: [
         ["screen", "screen", "screen", "screen", "screen", "screen", "screen"],
-        ...getFullWeeksWithDates(),
+        ...divide(elements, 7),
       ],
       gapX: 0,
       gapY: 0,
@@ -60,29 +51,27 @@ export default async (search: string, directory: string) => {
   >;
 
   let i = 0;
-  const doneDays = await findDatedFilesWithHeading(
-    search,
-    directory,
-  );
   for (const elementName of layout.elementNameToIndex.keys()) {
     const rectangle = layout.element(elementName as ElementName);
 
     i++;
 
-    const color = doneDays.includes(elementName) ? 0x34a853 : 0x000000;
+    const target = heatmapElements.find((element) => {
+      return difference(element.datetime, new Date(elementName)).days == 0;
+    });
+    const color = target ? colors[target.level] : colors[0];
 
+    const days = heatmapElements.map((el) => el.datetime);
     const button = new Button({
       parent: tui,
       theme: {
         base: crayon.bgHex(color),
-        focused: crayon.bgHex(color + 0x101010),
-        active: crayon.bgHex(color + 0x303030),
       },
       rectangle,
       zIndex: 1,
       label: {
         text: elementName === "screen"
-          ? `Total: ${doneDays.length} Restart: ${countRestarts(doneDays)}`
+          ? `Total: ${countUniqueDays(days)} Restart: ${countRestartDays(days)}`
           : String(new Date(elementName).getDate()),
         align: {
           vertical: "center",
@@ -93,10 +82,5 @@ export default async (search: string, directory: string) => {
 
     buttons[elementName] = button;
   }
-
-  tui.on("keyPress", ({ key }) => {
-    if (key === "q") {
-      tui.emit("destroy");
-    }
-  });
+  return await waitUntilDestroy(tui);
 };
