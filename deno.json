@@ -7,7 +7,7 @@
     "strict": true
   },
   "tasks": {
-    "build": "deno compile --allow-read --allow-write --allow-run --allow-env -o nik src/main.ts",
+    "build": "deno task pull-schema && deno compile --allow-read --allow-write --allow-run --allow-env -o nik src/main.ts",
     "run": "deno run --allow-read --allow-write --allow-run --allow-env --allow-net src/main.ts",
     "pull-schema": "deno --env -A --node-modules-dir npm:drizzle-kit pull && sed -i 's/string/date/g' ./db/migrations/schema.ts"
   },
@@ -15,8 +15,6 @@
     "@src/": "./src/",
     "@db/": "./db/",
     "@std/datetime": "jsr:@std/datetime@^0.225.4",
-    "@std/fs": "jsr:@std/fs@^1.0.15",
-    "@std/path": "jsr:@std/path@^1.0.8",
     "@cliffy/command": "jsr:@cliffy/command@^1.0.0-rc.7",
     "@cliffy/prompt": "jsr:@cliffy/prompt@^1.0.0-rc.7",
     "@types/pg": "npm:@types/pg@^8.11.11",
