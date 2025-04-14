@@ -1,5 +1,5 @@
 nik
 node_modules
-db/migrations
+db/migrations/*
 !db/migrations/schema.ts
 !db/migrations/relations.ts
