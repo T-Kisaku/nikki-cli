@@ -51,7 +51,7 @@ async function handleMeditation() {
   const tui = rootTui();
   await renderHeatmap(tui, elements);
   console.clear();
-  await renderCountup(tui, 10);
+  await renderCountup(tui, 60 * 60); // 1 hour
   console.clear();
   const memo = prompt("Give me review!! >");
   await db.update(meditationLogs)
