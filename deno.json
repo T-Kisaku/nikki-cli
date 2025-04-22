@@ -7,7 +7,7 @@
     "strict": true
   },
   "tasks": {
-    "build": "deno compile --allow-run --allow-env --allow-net -o nik src/main.ts",
+    "build": "deno compile --allow-run --allow-env --allow-net --allow-read --allow-write -o nik src/main.ts",
     "run": "deno run --allow-run --allow-env --allow-net src/main.ts",
     "pull-schema": "deno --env -A --node-modules-dir npm:drizzle-kit pull && sed -i 's/string/date/g' ./db/migrations/schema.ts"
   },

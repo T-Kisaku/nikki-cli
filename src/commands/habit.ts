@@ -53,7 +53,7 @@ async function handleMeditation() {
   console.clear();
   await renderCountup(tui, 60 * 60); // 1 hour
   console.clear();
-  const memo = prompt("Give me review!! >");
+  const memo = await getPrompt("Give me review!! >");
   await db.update(meditationLogs)
     .set({ endedAt: new Date(), memo })
     .where(eq(meditationLogs.id, inserted.id));
@@ -70,7 +70,11 @@ async function handleExercise() {
     console.error("Invalid exercise choice");
     return;
   }
-  await db.insert(exerciseLogs).values({ exerciseTypeId: exerciseTypeId });
+  const memo = await getPrompt("Give me review!! >");
+  await db.insert(exerciseLogs).values({
+    exerciseTypeId: exerciseTypeId,
+    memo,
+  });
   const logs = await db.select().from(exerciseLogs);
   const elements: HeatmapElement[] = logs.map((log) => ({
     datetime: log.datetime,
@@ -80,4 +84,20 @@ async function handleExercise() {
   await renderHeatmap(tui, elements);
   console.clear();
   await tuiExit(tui);
+}
+
+async function getPrompt(message: string) {
+  const path = await Deno.makeTempFile();
+  await Deno.writeTextFile(path, message);
+  const editorEnv = Deno.env.get("EDITOR")!;
+  const editor = new Deno.Command(editorEnv, {
+    args: [path],
+    stdin: "inherit",
+    stdout: "inherit",
+    stderr: "inherit",
+  });
+  await editor.output();
+  const text = await Deno.readTextFile(path);
+  await Deno.remove(path);
+  return text;
 }
