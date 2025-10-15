@@ -1,0 +1,10 @@
+dist/
+.mycli/
+*.log
+*.swp
+*.tmp
+result
+.nix-*
+bin/
+.bin/
+.air.toml
