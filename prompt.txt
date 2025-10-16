@@ -1,0 +1,14 @@
+I want to make release.sh
+
+- check if it's ok to release with current repo
+
+- prompt to name of git tag
+
+- make json file for flake.nix
+  - version should be refer from git tag, on this time use name got from prompt
+  - binary name should refer to projec_name of .goreleaser.yaml
+  - if getting value is failed, stop releasing
+
+- git commit the json file, execute `git tag` with name got from prompt and push them
+
+

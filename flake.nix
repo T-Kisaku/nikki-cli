@@ -4,7 +4,6 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    nix-lib.url = "github:nix-community/nix-lib";
   };
 
   outputs =
@@ -12,21 +11,15 @@
       self,
       nixpkgs,
       flake-utils,
-      nix-lib,
     }:
     flake-utils.lib.eachDefaultSystem (
       system:
       let
         pkgs = import nixpkgs { inherit system; };
+        releaseInfo = builtins.fromJSON (builtins.readFile ./release.json);
+        binaryName = releaseInfo.binaryName;
+        version = releaseInfo.version;
 
-        # Read binary name from .goreleaser.yaml
-        project = (nix-lib.lib.formats.fromYAML (builtins.readFile ./.goreleaser.yaml))[0];
-        binaryName = project.project_name;
-
-        # Allow injecting a tagged version via env for CI releases:
-        #   VERSION=$(./scripts/version.sh) nix build --impure .#mycli
-        verFromEnv = builtins.getEnv "VERSION";
-        version = if verFromEnv != "" then verFromEnv else "dev";
       in
       {
         packages.default = pkgs.buildGoModule {
@@ -62,11 +55,6 @@
             goreleaser
             cobra-cli
           ];
-          shellHook = ''
-            chmod +x scripts/version.sh 2>/dev/null || true
-            export VERSION="$($PWD/scripts/version.sh || echo dev)"
-            echo "VERSION=$VERSION  (from git tag or 'dev')"
-          '';
         };
 
         formatter = pkgs.nixpkgs-fmt;
