@@ -39,11 +39,14 @@
             "-X github.com/T-Kisaku/nikki-cli/internal/buildinfo.Version=${version}"
             "-X github.com/T-Kisaku/nikki-cli/internal/buildinfo.Name=${binaryName}"
           ];
+          postInstall = ''
+            mv "$out/bin/"* "$out/bin/${binaryName}"
+          '';
         };
 
         apps.default = {
           type = "app";
-          program = "${self.packages.${system}.default}/bin/${binaryName}";
+          program = "${self.packages.${system}.default}/bin/nik";
         };
 
         devShells.default = pkgs.mkShell {

@@ -29,4 +29,4 @@ EOF
 git add release.json
 git commit -m "chore(release): $tag"
 git tag "$tag"
-git push --follow-tags
+git push origin --tags
