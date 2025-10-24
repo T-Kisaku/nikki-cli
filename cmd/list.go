@@ -14,7 +14,8 @@ var showAll bool  // --all
 var showFull bool // --full
 
 var listCmd = &cobra.Command{
-	Use:   "list",
+	Use:     "list",
+	Aliases: []string{"ls"},
 	Short: "List diary files for the specified date range",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		from, to, err := listDate.Resolve(time.Now())

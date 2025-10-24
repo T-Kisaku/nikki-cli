@@ -11,6 +11,7 @@ import (
 )
 
 var openDate DateOpts
+var printEntryString bool // --entry-string
 
 var openCmd = &cobra.Command{
 	Use:   "open",
@@ -39,6 +40,11 @@ var openCmd = &cobra.Command{
 		default:
 			y, m, d := from.In(jst).Date()
 			file = dayFile(y, int(m), d)
+		}
+
+		if printEntryString {
+			fmt.Println(file)
+			return nil
 		}
 
 		// 絶対パス解決
@@ -75,5 +81,6 @@ var openCmd = &cobra.Command{
 
 func init() {
 	AddDateFlags(openCmd, &openDate)
+	openCmd.Flags().BoolVar(&printEntryString, "entry-string", false, "Output entry string to stdout")
 	rootCmd.AddCommand(openCmd)
 }
